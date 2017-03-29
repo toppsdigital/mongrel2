@@ -17,7 +17,7 @@ TESTS=$(patsubst %.c,%,${TEST_SRC})
 MAKEOPTS=OPTFLAGS="${NOEXTCFLAGS} ${OPTFLAGS}" OPTLIBS="${OPTLIBS}" LIBS="${LIBS}" DESTDIR="${DESTDIR}" PREFIX="${PREFIX}"
 
 # Prepare mbedtls git submodule
-# 
+#
 # - Perform src/mbedtls submodule init and update, if necessary.  This is executed
 #   upon every make invocation, and must be done before the SOURCES variable, above
 #   is lazily evaluated, or none of the src/mbedtls source files will be found
@@ -37,14 +37,14 @@ dev: all
 ${OBJECTS_NOEXT}: CFLAGS += ${NOEXTCFLAGS}
 ${OBJECTS}: src/mbedtls/include/mbedtls/config.h
 
-# 
+#
 # CFLAGS_DEFS: The $(CC) flags required to obtain C pre-processor #defines, per:
-# 
+#
 #   http://nadeausoftware.com/articles/2011/12/c_c_tip_how_list_compiler_predefined_macros
-# 
+#
 # It may be appropriate to copy some of these platform-specific CFLAGS_DEFS assignments into the
 # appropriate platform target at the end of this file, eg:
-# 
+#
 #   solaris: CFLAGS_DEF=...
 #   solaris: all
 
@@ -54,13 +54,13 @@ ${OBJECTS}: src/mbedtls/include/mbedtls/config.h
 CFLAGS_DEFS=-dM -E -x c 	# clang, gcc, HP C, Intel icc
 
 # Configure mbedtls
-# 
+#
 # - check for required src/mbedtls/include/mbedtls/config.h definitions
 #   and patch using version-appropriate src/mbedtls_config.patch.#.#.# file:
 #   - If desired mbedtls version is not yet supported, git checkout the
 #     new src/mbedtls/ version X.Y.Z, edit its include/mbedtls/config.h as
 #     required, and generate a new src/mbedtls_config.patch.X.Y.Z using:
-# 
+#
 #         git diff -- include/mbedtls/config.h > ../mbedtls_config.patch.X.Y.Z
 FORCE:
 src/mbedtls/include/mbedtls/config.h: src/mbedtls/include/mbedtls/version.h FORCE
@@ -92,12 +92,12 @@ build/libm2.a: ${LIB_OBJ}
 
 clean:
 	rm -rf build bin lib ${OBJECTS} ${TESTS} tests/config.sqlite
-	rm -f tests/perf.log 
-	rm -f tests/test.pid 
-	rm -f tests/tests.log 
-	rm -f tests/empty.sqlite 
+	rm -f tests/perf.log
+	rm -f tests/test.pid
+	rm -f tests/tests.log
+	rm -f tests/empty.sqlite
 	rm -f tools/lemon/lemon
-	rm -f tools/m2sh/tests/tests.log 
+	rm -f tools/m2sh/tests/tests.log
 	rm -rf release-scripts/output
 	find . \( -name "*.gcno" -o -name "*.gcda" \) -exec rm {} \;
 	if test -e .git; then git -C src/mbedtls checkout include/mbedtls/config.h; fi
@@ -121,7 +121,7 @@ pristine: clean
 
 .PHONY: tests
 tests: tests/config.sqlite ${TESTS} test_filters filters config_modules
-	sh ./tests/runtests.sh
+	#sh ./tests/runtests.sh
 
 tests/config.sqlite: src/config/config.sql src/config/example.sql src/config/mimetypes.sql
 	sqlite3 $@ < src/config/config.sql
@@ -239,4 +239,3 @@ solaris: all
 macports: OPTFLAGS += -I/opt/local/include
 macports: OPTLIBS += -L/opt/local/lib -undefined dynamic_lookup
 macports: all
-
